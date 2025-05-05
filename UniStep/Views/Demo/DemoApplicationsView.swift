@@ -19,30 +19,30 @@ enum ApplicationStatus: String {
 struct DemoApplicationsView: View {
     // Пример данных для заявок
     let applicants: [Application] = [
-        Application(applicantName: "Иван Иванов", programName: "Гуманитарные науки", status: .accepted),
-        Application(applicantName: "Алина Ахметова", programName: "Цифровой маркетинг", status: .pending),
-        Application(applicantName: "Ким Сан", programName: "Естественные науки", status: .awaitingDocs),
-        Application(applicantName: "Елена Смирнова", programName: "Биотехнологии", status: .accepted),
-        Application(applicantName: "Алексей Петров", programName: "Физика", status: .pending),
-        Application(applicantName: "Марина Журавлева", programName: "Социология", status: .awaitingDocs),
-        Application(applicantName: "Шолпан Тажиева", programName: "Математика", status: .accepted),
-        Application(applicantName: "Бауыржан Нуркенов", programName: "Медицина", status: .rejected),
-        
-        Application(applicantName: "Нұрболат Әлімқұлов", programName: "Құқықтану", status: .accepted),
-        Application(applicantName: "Айгерім Тұрарбекова", programName: "Экономика", status: .pending),
-        Application(applicantName: "Ержан Сейітов", programName: "Математика", status: .awaitingDocs),
-        Application(applicantName: "Әсем Тажибекова", programName: "Әлеуметтік ғылымдар", status: .accepted),
-        Application(applicantName: "Алмас Жұмабеков", programName: "Тарих", status: .pending),
-        Application(applicantName: "Гүлмира Құралбекова", programName: "Биология", status: .rejected),
-        Application(applicantName: "Дамир Нұрсейітов", programName: "Педагогика", status: .accepted),
-        Application(applicantName: "Айнұр Махамбетова", programName: "Физика", status: .awaitingDocs),
-        Application(applicantName: "Самал Қаржаубаева", programName: "Медициналық ғылымдар", status: .pending),
-        Application(applicantName: "Тимур Батырбеков", programName: "Қаржы", status: .accepted),
-        Application(applicantName: "Клара Бейсембаева", programName: "Кітапхана ісі", status: .rejected),
-        Application(applicantName: "Жанар Аманжолова", programName: "Экология", status: .pending),
-        Application(applicantName: "Қанат Жанабаев", programName: "Кәсіпкерлік", status: .accepted),
-        Application(applicantName: "Лаура Нұрмұхамбетова", programName: "Медицина", status: .awaitingDocs),
-        Application(applicantName: "Марат Бекетұлы", programName: "Информатика", status: .rejected)
+        Application(applicantName: "Айдана Ермекова", programName: "Компьютерные науки", status: .accepted),
+        Application(applicantName: "Нұрболат Әлімқұлов", programName: "Информационные технологии", status: .pending),
+        Application(applicantName: "Алина Ахметова", programName: "Информационная безопасность", status: .awaitingDocs),
+        Application(applicantName: "Ержан Сейітов", programName: "Программная инженерия", status: .rejected),
+        Application(applicantName: "Әсем Тажибекова", programName: "Data Science", status: .accepted),
+        Application(applicantName: "Алмас Жұмабеков", programName: "Информационные системы", status: .pending),
+        Application(applicantName: "Гүлмира Құралбекова", programName: "Вычислительная техника и ПО", status: .awaitingDocs),
+        Application(applicantName: "Дамир Нұрсейітов", programName: "Журналистика и репортерское дело", status: .rejected),
+        Application(applicantName: "Айнұр Махамбетова", programName: "Менеджмент и управление", status: .accepted),
+        Application(applicantName: "Тимур Батырбеков", programName: "Финансы и экономика", status: .pending),
+        Application(applicantName: "Клара Бейсембаева", programName: "Банковское и страховое дело", status: .awaitingDocs),
+        Application(applicantName: "Жанар Аманжолова", programName: "Коммуникации и телеком", status: .rejected),
+        Application(applicantName: "Ерасыл Ахмет", programName: "Big Data анализ", status: .accepted),
+        Application(applicantName: "Салтанат Кенжебаева", programName: "Кибербезопасность", status: .pending),
+        Application(applicantName: "Алишер Турсынов", programName: "Инженерия программного обеспечения", status: .awaitingDocs),
+        Application(applicantName: "Мадина Калдыбаева", programName: "Электронный бизнес", status: .rejected),
+        Application(applicantName: "Бауржан Аман", programName: "Цифровой маркетинг", status: .accepted),
+        Application(applicantName: "Сабина Омарова", programName: "Мультимедиа технологии", status: .pending),
+        Application(applicantName: "Диас Сейтжан", programName: "Web-разработка", status: .awaitingDocs),
+        Application(applicantName: "Карина Абдрахманова", programName: "Сетевые технологии", status: .rejected),
+        Application(applicantName: "Аружан Серикова", programName: "Технический перевод", status: .accepted),
+        Application(applicantName: "Мейрамбек Айдосов", programName: "Цифровые финансы", status: .pending),
+        Application(applicantName: "Дария Нұрланқызы", programName: "Управление IT-проектами", status: .awaitingDocs),
+        Application(applicantName: "Арман Қайратұлы", programName: "Геймдизайн и разработка игр", status: .rejected)
     ]
     
     @State private var searchText = "" // Для поиска по имени
@@ -58,8 +58,8 @@ struct DemoApplicationsView: View {
     }
 
     var body: some View {
-        VStack {
-            // Поиск абитуриента
+        VStack(spacing: 12) {
+            // 🔹 Поиск
             HStack {
                 TextField("Поиск абитуриента", text: $searchText)
                     .padding()
@@ -69,53 +69,52 @@ struct DemoApplicationsView: View {
                     .frame(height: 40)
                 
                 Button(action: {
-                    showFilter.toggle() // Показываем/скрываем фильтр
+                    showFilter.toggle()
                 }) {
                     Image(systemName: "line.horizontal.3.decrease.circle.fill")
                         .font(.title)
                         .foregroundColor(.gray)
                 }
+                .padding(.trailing)
             }
 
-            // Фильтры
+            // 🔹 Фильтры — ближе к полю поиска, не к списку
             if showFilter {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                     Button("Одобрено") {
                         toggleFilter(status: .accepted)
                     }
-                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.accepted)))
+                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.accepted), status: .accepted))
 
                     Button("На рассмотрении") {
                         toggleFilter(status: .pending)
                     }
-                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.pending)))
+                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.pending), status: .pending))
 
                     Button("Ожидание документов") {
                         toggleFilter(status: .awaitingDocs)
                     }
-                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.awaitingDocs)))
-                    
+                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.awaitingDocs), status: .awaitingDocs))
+
                     Button("Отклонено") {
-                        toggleFilter(status: .rejected) // Новый фильтр для отклоненных
+                        toggleFilter(status: .rejected)
                     }
-                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.rejected)))
+                    .buttonStyle(FilteredButtonStyle(isSelected: selectedStatus.contains(.rejected), status: .rejected))
                 }
                 .padding(.horizontal)
             }
 
-            // Список абитуриентов
+            // 🔹 Список абитуриентов
             List(filteredApplicants) { applicant in
                 HStack {
                     VStack(alignment: .leading) {
                         Text(applicant.applicantName)
                             .font(.headline)
-                        Text("Сфера университета: \(applicant.programName)")
+                        Text("Специализация: \(applicant.programName)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
-                    
                     Spacer()
-                    
                     StatusBadge(status: applicant.status)
                 }
             }
@@ -134,43 +133,19 @@ struct DemoApplicationsView: View {
     }
 }
 
-struct FilteredButtonStyle: ButtonStyle {
-    var isSelected: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(.horizontal, 15)
-            .padding(.vertical, 10)
-            .background(isSelected ? Color.blue : Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(8)
-            .frame(height: 40)
-    }
-}
-
-// Статус для заявки
-struct StatusBadge: View {
-    var status: ApplicationStatus
-
-    var body: some View {
-        Circle()
-            .fill(statusColor(status))  // Круг, цвет зависит от статуса
-            .frame(width: 10, height: 10)
-    }
-    
-    func statusColor(_ status: ApplicationStatus) -> Color {
-        switch status {
-        case .accepted:
-            return .green // Зеленый для "Принято"
-        case .pending:
-            return .orange // Оранжевый для "На рассмотрении"
-        case .awaitingDocs:
-            return .gray // Серый для "Ожидание документов"
-        case .rejected:
-            return .red // Красный для "Отклонено"
-        }
-    }
-}
+//struct FilteredButtonStyle: ButtonStyle {
+//    var isSelected: Bool
+//
+//    func makeBody(configuration: Configuration) -> some View {
+//        configuration.label
+//            .padding(.horizontal, 15)
+//            .padding(.vertical, 10)
+//            .background(isSelected ? Color.blue : Color.gray)
+//            .foregroundColor(.white)
+//            .cornerRadius(8)
+//            .frame(height: 40)
+//    }
+//}
 
 struct DemoApplicationsView_Previews: PreviewProvider {
     static var previews: some View {

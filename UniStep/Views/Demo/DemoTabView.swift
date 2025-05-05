@@ -46,3 +46,7 @@ struct DemoTabView: View {
         .padding(.horizontal, 20)
     }
 }
+
+#Preview {
+    DemoTabView()
+}

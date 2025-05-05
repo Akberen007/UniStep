@@ -34,13 +34,6 @@ struct DemoLoadingView: View {
                     .rotationEffect(.degrees(rotation))
                     .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: rotation)
                 
-//                Text("loading")
-//                    .multilineTextAlignment(.center)
-//                    .bold()
-//                    .foregroundColor(.red)
-//                    .opacity(0.3)
-                    
-                    
             }
             .compositingGroup()
             .frame(width: 60)
@@ -66,42 +59,3 @@ struct DemoLoadingView: View {
 #Preview {
     DemoLoadingView()
 }
-//
-//
-//import SwiftUI
-//
-//struct DemoLoadingView: View {
-//    @State private var start = false
-//
-//    var body: some View {
-//        ZStack {
-//            // Тень или фон текста
-//            Text("Загрузка...")
-//                .font(.largeTitle.bold())
-//                .foregroundStyle(.red.opacity(0.3))
-//
-//            // Основной текст с маской
-//            Text("Загрузка...")
-//                .font(.largeTitle.bold())
-//                .foregroundStyle(.red)
-//                .frame(width: 220, height: 60)
-//                .background(Color.white)
-//                .mask {
-//                    Circle()
-//                        .frame(width: 60, height: 60)
-//                        .offset(x: start ? 60 : -60)
-//                }
-//        }
-//        .onAppear {
-//            withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
-//                start = true
-//            }
-//        }
-//    }
-//}
-//
-//struct UniStepLoadingView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        DemoLoadingView()
-//    }
-//}

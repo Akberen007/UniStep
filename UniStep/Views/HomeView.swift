@@ -17,7 +17,7 @@ struct HomeView: View {
             VStack(spacing: 24) {
                 // 🔹 Логотип и текст
                 HStack(spacing: 8) {
-                    Image("books")
+                    Image("books1")
                         .resizable()
                         .frame(width: 50, height: 55)
                         .foregroundColor(.red)

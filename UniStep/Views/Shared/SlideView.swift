@@ -13,71 +13,122 @@ struct Slide: Identifiable {
     var title: String
     var subtitle: String
     var image: String
+    var gradient: LinearGradient
 }
 
 struct SlideView: View {
     @State private var currentIndex = 0
-    private let timer = Timer.publish(every: 6, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
 
     let slides = [
-        Slide(title: "Почему UniStep?", subtitle: "Платформа для приёмной кампании — быстро, удобно и эффективно.", image: "questionmark.circle.fill"),
-        Slide(title: "Создай цифровую приёмную", subtitle: "Платформа для регистрации вузов в 1 клик", image: "building.columns"),
-        Slide(title: "Управляй заявками", subtitle: "Следи за приёмной кампанией в реальном времени", image: "tray.full.fill"),
-        Slide(title: "Экономь время", subtitle: "Автоматическая генерация документов и уведомлений", image: "clock.arrow.circlepath")
+        Slide(
+            title: "🎓 Поступи в 2025!",
+            subtitle: "150+ университетов ждут твою заявку. Подача за 5 минут!",
+            image: "graduationcap.fill",
+            gradient: LinearGradient(
+                colors: [Color.red, Color.pink.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        ),
+        Slide(
+            title: "⚡ Быстро и просто",
+            subtitle: "Без очередей и бумажной волокиты. Все онлайн!",
+            image: "bolt.circle.fill",
+            gradient: LinearGradient(
+                colors: [Color.orange, Color.yellow.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        ),
+        Slide(
+            title: "📱 Отслеживай статус",
+            subtitle: "Получай уведомления о каждом этапе рассмотрения",
+            image: "bell.badge.fill",
+            gradient: LinearGradient(
+                colors: [Color.blue, Color.cyan.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        ),
+        Slide(
+            title: "🏆 Уже 1,247 заявок!",
+            subtitle: "Присоединяйся к тысячам абитуриентов по всему Казахстану",
+            image: "chart.line.uptrend.xyaxis.circle.fill",
+            gradient: LinearGradient(
+                colors: [Color.green, Color.mint.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
     ]
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             TabView(selection: $currentIndex) {
                 ForEach(Array(slides.enumerated()), id: \.1.id) { index, slide in
-                    VStack(spacing: 12) {
-                        Image(systemName: slide.image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(Color.red)
-                            .clipShape(Circle())
+                    ZStack {
+                        // Градиентный фон
+                        slide.gradient
+                            .ignoresSafeArea()
+                        
+                        HStack(spacing: 20) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(slide.title)
+                                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.leading)
 
-                        Text(slide.title)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .multilineTextAlignment(.center)
-
-                        Text(slide.subtitle)
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.horizontal)
+                                Text(slide.subtitle)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.9))
+                                    .multilineTextAlignment(.leading)
+                                    .lineLimit(3)
+                            }
+                            
+                            Spacer()
+                            
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white.opacity(0.2))
+                                    .frame(width: 70, height: 70)
+                                
+                                Image(systemName: slide.image)
+                                    .font(.system(size: 30, weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 20)
                     }
                     .tag(index)
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .frame(height: 250)
+            .frame(height: 160)
 
-            // Индикаторы-сегменты с возможностью кликать
-            HStack(spacing: 8) {
+            // Индикаторы одинакового размера
+            HStack(spacing: 6) {
                 ForEach(0..<slides.count, id: \.self) { index in
                     Button(action: {
-                        withAnimation {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             currentIndex = index
                         }
                     }) {
-                        Capsule()
-                            .fill(index == currentIndex ? Color.red : Color.gray.opacity(0.3))
-                            .frame(width: 14, height: 4)
+                        RoundedRectangle(cornerRadius: 6) // Увеличил радиус с 2 до 6
+                            .fill(index == currentIndex ? Color.red : Color.gray.opacity(0.4))
+                            .frame(width: 16, height: 4) // Одинаковая ширина для всех
+                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentIndex)
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
             }
-            .padding(.bottom, 10)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
         }
+        .background(Color.clear) // Убираем белый фон
         .onReceive(timer) { _ in
-            withAnimation {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 currentIndex = (currentIndex + 1) % slides.count
             }
         }

@@ -14,7 +14,7 @@ struct AdvantageItem: Identifiable {
     let title: String
 }
 
-// Модель для набора преимуществ
+// Модель для набора преимущесфтв
 struct AdvantageSet {
     let items: [AdvantageItem]
 }

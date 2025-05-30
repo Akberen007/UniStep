@@ -26,12 +26,12 @@ struct ApplicationFormView: View {
                     .padding(.top)
 
                 Group {
-                    CustomTextField(title: "Полное название университета", text: $fullName)
-                    CustomTextField(title: "Краткое название (логин)", text: $shortName)
-                    CustomTextField(title: "Email", text: $email, keyboardType: .emailAddress)
-                    CustomTextField(title: "Телефон", text: $phone, keyboardType: .phonePad)
-                    CustomTextField(title: "Официальный сайт", text: $website)
-                    CustomTextField(title: "Город / страна", text: $cityCountry)
+                    CustomTextField(title: "Полное название университета", text: $fullName, systemImage: "building.2")
+                    CustomTextField(title: "Краткое название (логин)", text: $shortName, systemImage: "person.crop.square")
+                    CustomTextField(title: "Email", text: $email, systemImage: "envelope")
+                    CustomTextField(title: "Телефон", text: $phone, systemImage: "phone")
+                    CustomTextField(title: "Официальный сайт", text: $website, systemImage: "globe")
+                    CustomTextField(title: "Город / страна", text: $cityCountry, systemImage: "mappin.and.ellipse")
                 }
 
                 VStack(alignment: .leading) {
@@ -68,6 +68,8 @@ struct ApplicationFormView: View {
 }
 
 
-#Preview {
-    ApplicationFormView()
+struct ApplicationFormView_Previews: PreviewProvider {
+    static var previews: some View {
+        ApplicationFormView()
+    }
 }

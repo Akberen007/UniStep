@@ -34,7 +34,7 @@ struct SlideView: View {
                         Image(systemName: slide.image)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 80, height: 80)
+                            .frame(width: 60, height: 60)
                             .padding()
                             .foregroundColor(.white)
                             .background(Color.red)

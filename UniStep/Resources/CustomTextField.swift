@@ -12,30 +12,40 @@ struct CustomTextField: View {
     @Binding var text: String
     var systemImage: String
     var isSecure: Bool = false
+    var errorMessage: String = ""
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: systemImage)
-                .foregroundColor(.gray)
-                .frame(width: 20, height: 20)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
+                Image(systemName: systemImage)
+                    .foregroundColor(.gray)
+                    .frame(width: 20, height: 20)
+                
+                if isSecure {
+                    SecureField(title, text: $text)
+                        .font(.system(size: 16))
+                } else {
+                    TextField(title, text: $text)
+                        .font(.system(size: 16))
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(8)
+            .frame(height: 48)
             
-            if isSecure {
-                SecureField(title, text: $text)
-                    .font(.system(size: 16))
-            } else {
-                TextField(title, text: $text)
-                    .font(.system(size: 16))
+            // Показываем ошибку, если она есть
+            if !errorMessage.isEmpty {
+                Text(errorMessage)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.red)
+                    .padding(.leading, 4)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
-        .frame(height: 48)
         .padding(.horizontal)
     }
 }
-
 #Preview {
     VStack(spacing: 16) {
         CustomTextField(title: "Email", text: .constant(""), systemImage: "envelope")

@@ -17,7 +17,8 @@ struct HomeView: View {
     @State private var showCalculator = false
     @State private var showHelp = false
     @State private var animateCards = false
-    @State private var showUniversitySheet = false
+    @State private var navigateToUniversities = false
+    @State private var navigateToLogin = false
 
     var body: some View {
         NavigationStack {
@@ -53,7 +54,7 @@ struct HomeView: View {
             }
             .background(
                 LinearGradient(
-                    colors: [Color.uniBackground, Color.white],
+                    colors: [Color.uniBackground ?? Color.gray.opacity(0.1), Color.white],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -69,6 +70,14 @@ struct HomeView: View {
                     }
                 }
             }
+            // Навигация
+            .navigationDestination(isPresented: $navigateToUniversities) {
+                UniversitiesCatalogView()
+            }
+            .navigationDestination(isPresented: $navigateToLogin) {
+                LoginView()
+            }
+            // Sheets
             .sheet(isPresented: $showApplicationForm) {
                 ApplicationFormView()
             }
@@ -99,10 +108,19 @@ struct HomeView: View {
                         .fill(Color.red.opacity(0.1))
                         .frame(width: 48, height: 48)
                     
-                    Image("books1")
-                        .resizable()
-                        .frame(width: 26, height: 30)
-                        .foregroundColor(.red)
+                    // Используем системную иконку если Image("books1") не найден
+                    Group {
+                        if let _ = UIImage(named: "books1") {
+                            Image("books1")
+                                .resizable()
+                                .frame(width: 26, height: 30)
+                                .foregroundColor(.red)
+                        } else {
+                            Image(systemName: "graduationcap.fill")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.red)
+                        }
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 1) {
@@ -121,11 +139,14 @@ struct HomeView: View {
             HStack(spacing: 12) {
                 // Уведомления
                 NotificationButton(hasNotification: true) {
-                    // TODO: Уведомления
+                    print("Notifications tapped")
                 }
                 
                 // Профиль
-                NavigationLink(destination: LoginView()) {
+                Button(action: {
+                    print("Profile tapped")
+                    navigateToLogin = true
+                }) {
                     ProfileButton()
                 }
             }
@@ -158,6 +179,7 @@ struct HomeView: View {
         VStack(spacing: 20) {
             // Main Action - Подать заявку
             Button(action: {
+                print("Application form button tapped")
                 showApplicationForm = true
             }) {
                 HStack(spacing: 16) {
@@ -209,19 +231,21 @@ struct HomeView: View {
                     subtitle: "По коду заявки",
                     color: .blue,
                     action: {
+                        print("Status check button tapped")
                         showStatusCheck = true
                     }
                 )
                 
-                NavigationLink(destination: UniversitiesCatalogView()) {
-                    SecondaryActionButton(
-                        icon: "building.2.circle.fill",
-                        title: "Университеты",
-                        subtitle: "Каталог вузов",
-                        color: .purple,
-                        action: {} // пустое действие, потому что это NavigationLink
-                    )
-                }
+                SecondaryActionButton(
+                    icon: "building.2.circle.fill",
+                    title: "Университеты",
+                    subtitle: "Каталог вузов",
+                    color: .purple,
+                    action: {
+                        print("Universities button tapped")
+                        navigateToUniversities = true
+                    }
+                )
             }
         }
         .padding(.horizontal, 20)
@@ -255,6 +279,7 @@ struct HomeView: View {
                     description: "Чек-лист и требования",
                     color: .orange,
                     action: {
+                        print("Documents button tapped")
                         showDocuments = true
                     }
                 )
@@ -265,6 +290,7 @@ struct HomeView: View {
                     description: "Важные даты",
                     color: .indigo,
                     action: {
+                        print("Deadlines button tapped")
                         showDeadlines = true
                     }
                 )
@@ -275,6 +301,7 @@ struct HomeView: View {
                     description: "Шансы поступления",
                     color: .mint,
                     action: {
+                        print("Calculator button tapped")
                         showCalculator = true
                     }
                 )
@@ -285,6 +312,7 @@ struct HomeView: View {
                     description: "FAQ и поддержка",
                     color: .teal,
                     action: {
+                        print("Help button tapped")
                         showHelp = true
                     }
                 )
@@ -310,15 +338,15 @@ struct HomeView: View {
                 
                 HStack(spacing: 20) {
                     FooterLink(title: "Поддержка") {
-                        // TODO: Поддержка
+                        print("Support tapped")
                     }
                     
                     FooterLink(title: "О проекте") {
-                        // TODO: О проекте
+                        print("About tapped")
                     }
                     
                     FooterLink(title: "Контакты") {
-                        // TODO: Контакты
+                        print("Contacts tapped")
                     }
                 }
             }
@@ -571,31 +599,141 @@ struct StatusCheckView: View {
     }
 }
 
-// Placeholder views для других экранов
+// MARK: - Placeholder Views для недостающих экранов
+
+// Заглушки для views если они не существуют
 struct DocumentsView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
-        Text("Documents View")
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "doc.text.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.orange)
+                
+                Text("Документы")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Список необходимых документов для поступления")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Документы")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Закрыть") { dismiss() }
+                }
+            }
+        }
     }
 }
 
 struct DeadlinesView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
-        Text("Deadlines View")
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "calendar.badge.clock")
+                    .font(.system(size: 60))
+                    .foregroundColor(.indigo)
+                
+                Text("Сроки подачи")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Важные даты приемной кампании")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Сроки")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Закрыть") { dismiss() }
+                }
+            }
+        }
     }
 }
 
 struct CalculatorView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
-        Text("Calculator View")
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "calculator")
+                    .font(.system(size: 60))
+                    .foregroundColor(.mint)
+                
+                Text("Калькулятор")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Рассчитайте свои шансы на поступление")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Калькулятор")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Закрыть") { dismiss() }
+                }
+            }
+        }
     }
 }
 
 struct HelpView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
-        Text("Help View")
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "questionmark.circle.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.teal)
+                
+                Text("Помощь")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                Text("Часто задаваемые вопросы и поддержка")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Помощь")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Закрыть") { dismiss() }
+                }
+            }
+        }
     }
 }
 
-#Preview{
+#Preview {
     HomeView()
 }

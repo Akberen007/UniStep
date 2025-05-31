@@ -68,9 +68,9 @@ struct SlideView: View {
             TabView(selection: $currentIndex) {
                 ForEach(Array(slides.enumerated()), id: \.1.id) { index, slide in
                     ZStack {
-                        // Градиентный фон
-                        slide.gradient
-                            .ignoresSafeArea()
+                        // Градиентный фон с закругленными углами
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(slide.gradient)
                         
                         HStack(spacing: 20) {
                             VStack(alignment: .leading, spacing: 12) {
@@ -115,9 +115,9 @@ struct SlideView: View {
                             currentIndex = index
                         }
                     }) {
-                        RoundedRectangle(cornerRadius: 6) // Увеличил радиус с 2 до 6
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(index == currentIndex ? Color.red : Color.gray.opacity(0.4))
-                            .frame(width: 16, height: 4) // Одинаковая ширина для всех
+                            .frame(width: 16, height: 4)
                             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: currentIndex)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -126,7 +126,7 @@ struct SlideView: View {
             .padding(.top, 12)
             .padding(.bottom, 8)
         }
-        .background(Color.clear) // Убираем белый фон
+        .background(Color.clear)
         .onReceive(timer) { _ in
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 currentIndex = (currentIndex + 1) % slides.count

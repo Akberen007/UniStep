@@ -8,11 +8,6 @@
 import SwiftUI
 
 struct ApplicationSuccessView: View {
-    @Environment(\.dismiss) private var dismiss
-    let applicationCode = "AB2024-\(String(format: "%04d", Int.random(in: 1000...9999)))"
-    let submissionDate = Date()
-    
-    // Данные заявки (можно передавать из ApplicationFormView)
     let applicantName: String
     let university: String
     let faculty: String
@@ -20,325 +15,238 @@ struct ApplicationSuccessView: View {
     let phone: String
     let email: String
     
-    @State private var showShareSheet = false
-    @State private var animateSuccess = false
+    @Environment(\.dismiss) private var dismiss
     
-    init(applicantName: String,
-         university: String,
-         faculty: String,
-         specialty: String,
-         phone: String,
-         email: String) {
-        self.applicantName = applicantName.isEmpty ? "Не указано" : applicantName
-        self.university = university.isEmpty ? "Не выбран" : university
-        self.faculty = faculty.isEmpty ? "Не выбран" : faculty
-        self.specialty = specialty.isEmpty ? "Не выбрана" : specialty
-        self.phone = phone.isEmpty ? "Не указан" : phone
-        self.email = email.isEmpty ? "Не указан" : email
+    // Генерируем уникальный код заявки
+    private var applicationCode: String {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let randomNumber = Int.random(in: 1000...9999)
+        return "AB\(currentYear)-\(randomNumber)"
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 32) {
-                // Success Animation Header
-                successHeader
-                
-                // Application Details Card
-                applicationDetailsCard
-                
-                // Next Steps Card
-                nextStepsCard
-                
-                // Important Info Card
-                importantInfoCard
-                
-                // Action Buttons
-                actionButtons
-                
-                Spacer(minLength: 20)
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
-        }
-        .background(
-            LinearGradient(
-                colors: [Color.green.opacity(0.05), Color.white],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-        )
-        .navigationTitle("Заявка подана")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Готово") {
-                    dismiss()
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 32) {
+                    // Success Animation & Icon
+                    VStack(spacing: 20) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.green.opacity(0.1))
+                                .frame(width: 120, height: 120)
+                            
+                            Circle()
+                                .fill(Color.green.opacity(0.2))
+                                .frame(width: 90, height: 90)
+                            
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 50))
+                                .foregroundColor(.green)
+                        }
+                        
+                        VStack(spacing: 8) {
+                            Text("Заявка подана успешно!")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Ваша заявка принята и будет рассмотрена приемной комиссией")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(3)
+                        }
+                    }
+                    
+                    // Application Details Card
+                    VStack(spacing: 20) {
+                        // Application Code
+                        VStack(spacing: 12) {
+                            Text("Код заявки")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            Text(applicationCode)
+                                .font(.system(size: 24, weight: .bold, design: .monospaced))
+                                .foregroundColor(.red)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.red.opacity(0.1))
+                                        .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                        
+                        // Application Info
+                        VStack(spacing: 16) {
+                            ApplicationInfoRow(title: "Абитуриент", value: applicantName)
+                            ApplicationInfoRow(title: "Университет", value: university)
+                            ApplicationInfoRow(title: "Факультет", value: faculty)
+                            ApplicationInfoRow(title: "Специальность", value: specialty)
+                            ApplicationInfoRow(title: "Телефон", value: phone)
+                            ApplicationInfoRow(title: "Email", value: email)
+                        }
+                        .padding(20)
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+                    }
+                    
+                    // Next Steps
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Что дальше?")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                        
+                        VStack(spacing: 12) {
+                            NextStepItem(
+                                number: "1",
+                                title: "Ожидание рассмотрения",
+                                description: "Приемная комиссия рассмотрит вашу заявку в течение 3-5 рабочих дней"
+                            )
+                            
+                            NextStepItem(
+                                number: "2",
+                                title: "Уведомление",
+                                description: "Вам придет SMS или звонок с результатами рассмотрения"
+                            )
+                            
+                            NextStepItem(
+                                number: "3",
+                                title: "Подача документов",
+                                description: "При положительном решении принесите оригиналы документов"
+                            )
+                        }
+                    }
+                    .padding(20)
+                    .background(Color.white)
+                    .cornerRadius(16)
+                    .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+                    
+                    // Action Buttons
+                    VStack(spacing: 12) {
+                        // Save Application Code
+                        Button(action: {
+                            UIPasteboard.general.string = applicationCode
+                        }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "doc.on.doc")
+                                    .font(.system(size: 16, weight: .semibold))
+                                
+                                Text("Скопировать код заявки")
+                                    .font(.system(size: 16, weight: .semibold))
+                            }
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.red, lineWidth: 2)
+                            )
+                        }
+                        
+                        // Back to Home
+                        Button(action: {
+                            // Закрываем все экраны и возвращаемся на главную
+                            dismiss()
+                        }) {
+                            Text("Вернуться на главную")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.red)
+                                )
+                        }
+                    }
                 }
-                .fontWeight(.semibold)
+                .padding(20)
             }
-        }
-        .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.6).delay(0.2)) {
-                animateSuccess = true
-            }
-        }
-        .sheet(isPresented: $showShareSheet) {
-            ShareSheet(items: [shareText])
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
+}
+
+// MARK: - Supporting Views
+struct ApplicationInfoRow: View {
+    let title: String
+    let value: String
     
-    // MARK: - Success Header
-    private var successHeader: some View {
-        VStack(spacing: 20) {
-            // Animated Success Icon
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.secondary)
+                .frame(width: 100, alignment: .leading)
+            
+            Text(value)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+
+#Preview {
+    ApplicationSuccessView(
+        applicantName: "Иван Иванов",
+        university: "МУИТ",
+        faculty: "Факультет информационных технологий",
+        specialty: "Программная инженерия",
+        phone: "+7 (777) 123-45-67",
+        email: "ivan@example.com"
+    )
+}
+
+struct NextStepItem: View {
+    let number: String
+    let title: String
+    let description: String
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Step Number
             ZStack {
                 Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.green, Color.green.opacity(0.8)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 100, height: 100)
-                    .shadow(color: .green.opacity(0.3), radius: 20, x: 0, y: 10)
-                    .scaleEffect(animateSuccess ? 1 : 0.5)
-                    .animation(.spring(response: 0.6, dampingFraction: 0.7), value: animateSuccess)
+                    .fill(Color.red.opacity(0.1))
+                    .frame(width: 32, height: 32)
                 
-                Image(systemName: "checkmark")
-                    .font(.system(size: 40, weight: .bold))
-                    .foregroundColor(.white)
-                    .scaleEffect(animateSuccess ? 1 : 0)
-                    .animation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.3), value: animateSuccess)
-            }
-            
-            VStack(spacing: 8) {
-                Text("Заявка успешно подана!")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(.primary)
-                    .multilineTextAlignment(.center)
-                
-                Text("Ваша заявка принята и будет рассмотрена приемной комиссией")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            .opacity(animateSuccess ? 1 : 0)
-            .offset(y: animateSuccess ? 0 : 20)
-            .animation(.easeOut(duration: 0.6).delay(0.4), value: animateSuccess)
-        }
-    }
-    
-    // MARK: - Application Details Card
-    private var applicationDetailsCard: some View {
-        VStack(spacing: 24) {
-            // Header
-            HStack {
-                Image(systemName: "doc.text.fill")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.blue)
-                
-                Text("Детали заявки")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.primary)
-                
-                Spacer()
-            }
-            
-            VStack(spacing: 16) {
-                DetailRow(title: "Код заявки", value: applicationCode, isHighlighted: true)
-                DetailRow(title: "Дата подачи", value: formatDate(submissionDate))
-                DetailRow(title: "Абитуриент", value: applicantName)
-                DetailRow(title: "Университет", value: university)
-                DetailRow(title: "Факультет", value: faculty)
-                DetailRow(title: "Специальность", value: specialty)
-                DetailRow(title: "Телефон", value: phone)
-                DetailRow(title: "Email", value: email)
-            }
-        }
-        .padding(24)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
-        )
-    }
-    
-    // MARK: - Next Steps Card
-    private var nextStepsCard: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Image(systemName: "list.bullet.clipboard")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.orange)
-                
-                Text("Что дальше?")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.primary)
-                
-                Spacer()
-            }
-            
-            VStack(spacing: 16) {
-                StepRow(
-                    number: 1,
-                    title: "Ожидание рассмотрения",
-                    description: "Приемная комиссия рассмотрит вашу заявку в течение 3-5 рабочих дней",
-                    color: .blue
-                )
-                
-                StepRow(
-                    number: 2,
-                    title: "Уведомление о статусе",
-                    description: "Вам придет SMS и email с результатом рассмотрения заявки",
-                    color: .purple
-                )
-                
-                StepRow(
-                    number: 3,
-                    title: "Подача документов",
-                    description: "При положительном решении подайте оригиналы документов",
-                    color: .green
-                )
-            }
-        }
-        .padding(24)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
-        )
-    }
-    
-    // MARK: - Important Info Card
-    private var importantInfoCard: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 20, weight: .semibold))
+                Text(number)
+                    .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.red)
-                
-                Text("Важная информация")
-                    .font(.system(size: 20, weight: .bold))
+            }
+            
+            // Step Content
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.primary)
                 
-                Spacer()
-            }
-            
-            VStack(spacing: 16) {
-                InfoRow(
-                    icon: "bookmark.fill",
-                    text: "Сохраните код заявки: \(applicationCode)",
-                    color: .red
-                )
-                
-                InfoRow(
-                    icon: "clock.fill",
-                    text: "Срок действия заявки: до 31 августа 2025 года",
-                    color: .orange
-                )
-                
-                InfoRow(
-                    icon: "phone.fill",
-                    text: "Горячая линия: +7 (727) 123-45-67",
-                    color: .blue
-                )
-                
-                InfoRow(
-                    icon: "envelope.fill",
-                    text: "Email поддержки: support@unistep.kz",
-                    color: .green
-                )
-            }
-        }
-        .padding(24)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
-                .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
-        )
-    }
-    
-    // MARK: - Action Buttons
-    private var actionButtons: some View {
-        VStack(spacing: 16) {
-            // Primary Actions
-            HStack(spacing: 12) {
-                Button(action: {
-                    // TODO: Проверить статус заявки
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 16, weight: .semibold))
-                        Text("Проверить статус")
-                            .font(.system(size: 16, weight: .semibold))
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        LinearGradient(
-                            colors: [Color.blue, Color.blue.opacity(0.8)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(12)
-                }
-                
-                Button(action: {
-                    showShareSheet = true
-                }) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "square.and.arrow.up")
-                            .font(.system(size: 16, weight: .semibold))
-                        Text("Поделиться")
-                            .font(.system(size: 16, weight: .semibold))
-                    }
-                    .foregroundColor(.blue)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
-                }
-            }
-            
-            // Secondary Action
-            Button(action: {
-                dismiss()
-            }) {
-                Text("Вернуться на главную")
-                    .font(.system(size: 16, weight: .medium))
+                Text(description)
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundColor(.secondary)
+                    .multilineTextAlignment(.leading)
             }
+            
+            Spacer()
         }
     }
-    
-    // MARK: - Helper Methods
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter.string(from: date)
-    }
-    
-    private var shareText: String {
-        """
-        🎓 Заявка в университет подана!
-        
-        Код заявки: \(applicationCode)
-        Университет: \(university)
-        Специальность: \(specialty)
-        Дата: \(formatDate(submissionDate))
-        
-        Подано через UniStep
-        """
-    }
+}
+
+#Preview {
+    ApplicationSuccessView(
+        applicantName: "Иван Иванов",
+        university: "МУИТ",
+        faculty: "Факультет информационных технологий",
+        specialty: "Программная инженерия",
+        phone: "+7 (777) 123-45-67",
+        email: "ivan@example.com"
+    )
 }
 
 // MARK: - Supporting Views

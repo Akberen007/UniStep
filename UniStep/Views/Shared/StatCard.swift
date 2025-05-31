@@ -4,6 +4,7 @@
 //
 //  Created by Akberen on 05.05.2025.
 //
+
 import SwiftUI
 
 // MARK: - Карточка статистики
@@ -40,7 +41,7 @@ struct StatCard: View {
 
             Text(title)
                 .font(.caption2)
-                .foregroundColor(Color.uniTextPrimary.opacity(0.8))
+                .foregroundColor(.primary.opacity(0.8)) // Changed from Color.uniTextPrimary
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)

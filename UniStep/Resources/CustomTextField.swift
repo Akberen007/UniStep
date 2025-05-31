@@ -14,29 +14,33 @@ struct CustomTextField: View {
     var isSecure: Bool = false
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Image(systemName: systemImage)
                 .foregroundColor(.gray)
-                .frame(width: 24, height: 24) // Уменьшаем размер иконки
-
+                .frame(width: 20, height: 20)
+            
             if isSecure {
                 SecureField(title, text: $text)
-                    .padding(12)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-                    .frame(height: 48) // Устанавливаем фиксированную высоту для поля
+                    .font(.system(size: 16))
             } else {
                 TextField(title, text: $text)
-                    .padding(12)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-                    .frame(height: 48) // Устанавливаем фиксированную высоту для поля
+                    .font(.system(size: 16))
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(8)
+        .frame(height: 48)
         .padding(.horizontal)
     }
 }
 
 #Preview {
-    CustomTextField(title: "Email", text: .constant(""), systemImage: "envelope")
+    VStack(spacing: 16) {
+        CustomTextField(title: "Email", text: .constant(""), systemImage: "envelope")
+        CustomTextField(title: "Пароль", text: .constant(""), systemImage: "lock", isSecure: true)
+        CustomTextField(title: "Телефон", text: .constant(""), systemImage: "phone")
+    }
+    .padding()
 }

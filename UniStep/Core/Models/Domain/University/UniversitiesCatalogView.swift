@@ -117,6 +117,7 @@ struct UniversitiesCatalogView: View {
     }
 }
 
+
 // MARK: - University Card
 struct UniversityCard: View {
     let university: University
@@ -128,12 +129,20 @@ struct UniversityCard: View {
                 // University Logo/Image
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(university.color.opacity(0.15))
+                        .fill(Color.white)
                         .frame(width: 70, height: 70)
                     
-                    Image(systemName: university.icon)
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundColor(university.color)
+                    if let logoImage = university.logoImage {
+                        Image(logoImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(8)
+                    } else {
+                        Image(systemName: university.icon)
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundColor(university.color)
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -153,7 +162,7 @@ struct UniversityCard: View {
                     // Location and stats
                     HStack(spacing: 16) {
                         HStack(spacing: 4) {
-                            Image(systemName: "location.fill")
+                            Image(systemName: "location")
                                 .font(.system(size: 12))
                                 .foregroundColor(.gray)
                             Text(university.city)
@@ -288,8 +297,3 @@ struct CategoryBadge: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        UniversitiesCatalogView()
-    }
-}
